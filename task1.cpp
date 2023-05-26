@@ -6,6 +6,8 @@
 #include <string.h>
 #include <algorithm>
 
+#include "../lab03/int_functions.h"
+
 double y_precise(double t)
 {
     return cos(t*t-1);
@@ -91,15 +93,15 @@ int main()
 {
     double t0 = 1;
     const double T = 2;
-    const int steps = 11;
-    const double h = (T-t0)/(steps-1);
+    const int steps = 10;
+    const double h = (T-t0)/steps;
     std::vector<double> y(steps);
     y[0] = 1;
 
     std::cout << "Solving from on [" << t0 << ", " << T << "] with h = " << h 
         << ", steps: " << steps << std::endl;
 
-    solve_DE_rk(y, f, steps-1, t0, T);
+    solve_DE_rk(y, f, steps, t0, T);
 
     int max_error_index;
     double error = find_error(y, y_precise, t0, h, &max_error_index);
