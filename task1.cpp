@@ -6,8 +6,6 @@
 #include <string.h>
 #include <algorithm>
 
-#include "../lab03/int_functions.h"
-
 double y_precise(double t)
 {
     return cos(t*t-1);
@@ -48,18 +46,6 @@ double find_error(std::vector<double>& y, double y_presice(double), double t0, d
     return error;
 }
 
-void print_to_file(std::vector<double> data, size_t precision, std::string file_name)
-{
-    std::ofstream output_file;
-    output_file.open(file_name);
-    output_file << std::setprecision(precision);
-    for(auto val : data)
-    {
-        output_file << val << '\n';
-    }
-    output_file.close();
-}
-
 void print_to_file(std::vector<std::vector<double>> data, size_t precision, std::string file_name)
 {
     std::ofstream output_file;
@@ -76,7 +62,6 @@ void print_to_file(std::vector<std::vector<double>> data, size_t precision, std:
     output_file.close();
 }
 
-
 void print_results(std::vector<double> y, double t0, double h)
 {
     std::cout << std::setw(10) << "t" << std::setw(25) << "value\n";
@@ -87,15 +72,13 @@ void print_results(std::vector<double> y, double t0, double h)
     }
 }
 
-
-
 int main()
 {
     double t0 = 1;
     const double T = 2;
     const int steps = 10;
     const double h = (T-t0)/steps;
-    std::vector<double> y(steps);
+    std::vector<double> y(steps + 1);
     y[0] = 1;
 
     std::cout << "Solving from on [" << t0 << ", " << T << "] with h = " << h 
@@ -103,11 +86,11 @@ int main()
 
     solve_DE_rk(y, f, steps, t0, T);
 
+    print_results(y, t0, h);
+    
     int max_error_index;
     double error = find_error(y, y_precise, t0, h, &max_error_index);
 
-    print_results(y, t0, h);
-    
     std::vector<double> t(y.size());
     std::generate(t.begin(), t.end(), [h, a= (t0 - h)]() mutable {return a += h; });
     std::vector<std::vector<double>> data_to_print = {t, y};
